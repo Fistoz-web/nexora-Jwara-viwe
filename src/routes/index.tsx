@@ -118,7 +118,7 @@ function Dashboard() {
       <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
           { to: "/email", title: "Smart Email Studio", desc: "Draft, rewrite, and personalize.", icon: Mail },
-          { to: "/meetings", title: "Meeting Intelligence", desc: "Transcripts → action items.", icon: ClipboardListIcon },
+          { to: "/meetings", title: "Meeting Intelligence", desc: "Transcripts → action items.", icon: ClipboardList },
           { to: "/research", title: "Research Hub", desc: "Documents → key insights.", icon: FlaskConical },
           { to: "/tasks", title: "Task Board & Calendar", desc: "Plan, prioritize, focus.", icon: Calendar },
         ].map((m) => (
@@ -136,11 +136,4 @@ function Dashboard() {
       </div>
     </Shell>
   );
-}
-
-function ClipboardListIcon(props: React.ComponentProps<typeof Target>) {
-  // Just re-use any icon import to satisfy typing — replaced via lucide
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const Lucide = require("lucide-react").ClipboardList;
-  return <Lucide {...props} />;
 }
