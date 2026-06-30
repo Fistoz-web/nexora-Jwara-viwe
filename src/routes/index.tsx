@@ -1,9 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/nexora/Shell";
-import { Card, Pill, SectionHeader, BrandButton, GhostButton } from "@/components/nexora/ui";
 import {
-  Sparkles, TrendingUp, Clock, Target, Zap, ArrowRight,
-  Mail, Calendar, FlaskConical, CheckCircle2, AlertCircle, ClipboardList,
+  Sparkles, Zap, ArrowRight, Mail, Calendar, FlaskConical, ClipboardList,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -16,123 +14,180 @@ export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
+type TimelineItem = {
+  time: string;
+  title: string;
+  meta: string;
+  state: "done" | "active" | "upcoming";
+};
+
+const TIMELINE: TimelineItem[] = [
+  { time: "09:00 – 09:30", title: "Standup — Product Team", meta: "Done · Notes saved", state: "done" },
+  { time: "09:00 – 11:30", title: "Deep Work: Q3 Roadmap draft", meta: "AI-optimized focus slot", state: "active" },
+  { time: "13:00 – 13:45", title: "Reply to Acme RFP", meta: "Urgent · Draft ready in Email Studio", state: "upcoming" },
+  { time: "14:30 – 15:00", title: "Design Review with Maya", meta: "Agenda auto-prepared", state: "upcoming" },
+  { time: "17:30 – 18:00", title: "Weekly status report", meta: "Deadline · 1 template available", state: "upcoming" },
+];
+
+const METRICS = [
+  { label: "Cognitive Load", value: "62%", footer: null, progress: 62 },
+  { label: "Tasks Open", value: "14", footer: { text: "−3 from yesterday", tone: "success" as const } },
+  { label: "Focus Hours", value: "4.5h", footer: { text: "Target: 6.0h", tone: "muted" as const } },
+  { label: "Velocity Score", value: "87", footer: { text: "Top 10% this quarter", tone: "brand" as const } },
+];
+
+const QUICK_LINKS = [
+  { to: "/email", label: "Email", icon: Mail },
+  { to: "/meetings", label: "Meetings", icon: ClipboardList },
+  { to: "/research", label: "Research", icon: FlaskConical },
+  { to: "/tasks", label: "Tasks", icon: Calendar },
+];
+
 function Dashboard() {
-  const now = new Date();
-  const greeting = now.getHours() < 12 ? "Good morning" : now.getHours() < 18 ? "Good afternoon" : "Good evening";
-
   return (
-    <Shell
-      title="Daily Briefing"
-      subtitle="Your AI-orchestrated start to the day"
-      actions={<BrandButton><Sparkles className="h-4 w-4" /> Refresh Briefing</BrandButton>}
-    >
-      {/* Hero briefing */}
-      <Card className="relative overflow-hidden p-6 md:p-8">
-        <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
-        <div className="relative">
-          <Pill tone="brand"><Sparkles className="mr-1 h-3 w-3" /> AI Morning Briefing</Pill>
-          <h2 className="mt-3 text-2xl font-extrabold tracking-tight md:text-3xl">
-            {greeting}, Alex. Here's your <span className="brand-text">optimized day</span>.
-          </h2>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            You have <b className="text-foreground">3 meetings</b>, <b className="text-foreground">2 urgent emails</b>, and <b className="text-foreground">1 deadline approaching</b>. I've blocked focus time at 10:30–12:00 for the Q3 roadmap.
-          </p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            <BrandButton><Zap className="h-4 w-4" /> Start Focus Block</BrandButton>
-            <GhostButton>View Full Schedule <ArrowRight className="h-4 w-4" /></GhostButton>
-          </div>
-        </div>
-      </Card>
-
-      {/* Workload matrix */}
-      <div className="mt-8 grid gap-4 md:grid-cols-4">
-        {[
-          { label: "Cognitive Load", value: "62%", trend: "+8%", icon: TrendingUp, tone: "brand" as const, note: "Heavier than yesterday" },
-          { label: "Tasks Open", value: "14", trend: "-3", icon: Target, tone: "success" as const, note: "On track for week" },
-          { label: "Focus Hours", value: "4.5h", trend: "+1.2h", icon: Clock, tone: "brand" as const, note: "Above weekly avg" },
-          { label: "Velocity Score", value: "87", trend: "+12", icon: Zap, tone: "success" as const, note: "Top 10% this quarter" },
-        ].map((m) => (
-          <Card key={m.label} className="p-5">
-            <div className="flex items-start justify-between">
-              <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{m.label}</div>
-              <m.icon className="h-4 w-4 text-primary" />
+    <Shell title="Daily Briefing" subtitle="Your AI-orchestrated start to the day">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6">
+        {/* Hero: AI Morning Briefing */}
+        <section className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-surface/70 p-6 backdrop-blur-xl md:p-8">
+          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/25 blur-3xl" />
+          <div className="pointer-events-none absolute -left-24 bottom-0 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
+          <div className="relative z-10">
+            <div className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary shadow-[0_0_10px_var(--color-primary)]" />
+              <h1 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-primary">Morning Briefing</h1>
             </div>
-            <div className="mt-3 flex items-baseline gap-2">
-              <div className="text-3xl font-extrabold tracking-tight">{m.value}</div>
-              <Pill tone={m.tone}>{m.trend}</Pill>
+            <p className="mt-3 max-w-2xl text-xl font-medium leading-tight md:text-2xl">
+              Good morning, Alex. Your peak cognitive window is{" "}
+              <span className="text-primary">09:00 – 11:30</span>. Focus on the Q3 roadmap draft before your 13:00 client reply.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <button className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow-[0_8px_24px_-8px_rgba(168,85,247,0.7)] transition hover:brightness-110">
+                <Zap className="h-3.5 w-3.5" /> Start Deep Work
+              </button>
+              <button className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-medium text-foreground transition hover:bg-white/[0.07]">
+                Review Plan
+              </button>
             </div>
-            <div className="mt-2 text-xs text-muted-foreground">{m.note}</div>
-          </Card>
-        ))}
-      </div>
-
-      {/* Two-column: Timeline + AI Optimization */}
-      <div className="mt-8 grid gap-6 lg:grid-cols-3">
-        <Card className="p-6 lg:col-span-2">
-          <SectionHeader eyebrow="Unified Timeline" title="Today's Schedule" action={<GhostButton>Calendar</GhostButton>} />
-          <div className="space-y-3">
-            {[
-              { time: "09:00", title: "Standup — Product Team", type: "Meeting", tone: "brand" as const, icon: Calendar },
-              { time: "10:30", title: "Focus Block: Q3 Roadmap draft", type: "Deep Work", tone: "success" as const, icon: Target },
-              { time: "13:00", title: "Reply to Client RFP — Acme Corp", type: "Urgent Email", tone: "warning" as const, icon: Mail },
-              { time: "14:30", title: "Design Review with Maya", type: "Meeting", tone: "brand" as const, icon: Calendar },
-              { time: "16:00", title: "Review research: Market Sizing v3", type: "Research", tone: "neutral" as const, icon: FlaskConical },
-              { time: "17:30", title: "Submit weekly status report", type: "Deadline", tone: "danger" as const, icon: AlertCircle },
-            ].map((t) => (
-              <div key={t.time} className="flex items-center gap-4 rounded-lg border border-border bg-surface-elevated/40 px-4 py-3 transition hover:border-border-active hover:bg-surface-elevated">
-                <div className="font-mono text-xs font-semibold text-muted-foreground">{t.time}</div>
-                <div className="h-8 w-px bg-border" />
-                <t.icon className="h-4 w-4 text-primary" />
-                <div className="flex-1 truncate text-sm font-medium">{t.title}</div>
-                <Pill tone={t.tone}>{t.type}</Pill>
-              </div>
-            ))}
           </div>
-        </Card>
+        </section>
 
-        <Card className="relative overflow-hidden p-6">
-          <div className="absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-primary/15 blur-3xl" />
-          <Pill tone="brand"><Sparkles className="mr-1 h-3 w-3" /> AI Strategy</Pill>
-          <h3 className="mt-3 text-lg font-bold">Time Optimization</h3>
-          <p className="mt-1 text-xs text-muted-foreground">Insights based on your last 14 days.</p>
+        {/* Metric grid — 2 cols mobile, 4 cols desktop */}
+        <section className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+          {METRICS.map((m) => (
+            <div key={m.label} className="flex flex-col rounded-xl border border-white/[0.05] bg-surface/50 p-4 backdrop-blur-sm transition hover:border-white/[0.12] hover:bg-surface/70">
+              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{m.label}</span>
+              <span className="mt-1 text-xl font-bold md:text-2xl">{m.value}</span>
+              {m.progress !== undefined && (
+                <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/[0.06]">
+                  <div className="h-full bg-primary shadow-[0_0_8px_rgba(168,85,247,0.6)]" style={{ width: `${m.progress}%` }} />
+                </div>
+              )}
+              {m.footer && (
+                <span className={`mt-2 text-[10px] ${
+                  m.footer.tone === "success" ? "text-success" :
+                  m.footer.tone === "brand" ? "text-primary" :
+                  "text-muted-foreground"
+                }`}>
+                  {m.footer.text}
+                </span>
+              )}
+            </div>
+          ))}
+        </section>
 
-          <div className="mt-5 space-y-4">
-            {[
-              { label: "Batch emails 13:00–13:30 instead of throughout the day", gain: "Save 47 min" },
-              { label: "Move standup to 9:30 — better focus window before", gain: "+18% focus" },
-              { label: "Delegate 'Status report' template to Nexora automation", gain: "Save 32 min" },
-            ].map((s, i) => (
-              <div key={i} className="rounded-lg border border-border bg-background/40 p-3">
-                <div className="text-sm font-medium leading-snug">{s.label}</div>
-                <div className="mt-2 flex items-center justify-between">
-                  <Pill tone="success"><CheckCircle2 className="mr-1 h-3 w-3" />{s.gain}</Pill>
-                  <button className="text-xs font-semibold text-primary hover:underline">Apply</button>
+        {/* Two-column: Timeline + AI Strategy */}
+        <section className="grid gap-6 lg:grid-cols-[1fr_360px]">
+          {/* Timeline */}
+          <div className="flex flex-col gap-4">
+            <header className="flex items-end justify-between">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Timeline</h2>
+              <span className="text-xs font-medium text-primary">Today</span>
+            </header>
+            <div className="relative">
+              <div className="absolute left-[7px] top-2 bottom-2 w-px bg-white/[0.08]" />
+              <ul className="space-y-5">
+                {TIMELINE.map((t) => (
+                  <li key={t.title} className="relative flex flex-col pl-8">
+                    {t.state === "active" ? (
+                      <span className="absolute left-0 top-1.5 grid h-4 w-4 place-items-center rounded-full border-4 border-background bg-primary shadow-[0_0_12px_var(--color-primary)]" />
+                    ) : t.state === "done" ? (
+                      <span className="absolute left-0 top-1.5 h-4 w-4 rounded-full border-4 border-background bg-success/80" />
+                    ) : (
+                      <span className="absolute left-0 top-1.5 h-4 w-4 rounded-full border-4 border-background bg-white/[0.12]" />
+                    )}
+                    <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t.time}</span>
+                    <span className={`mt-0.5 text-sm font-medium ${t.state === "upcoming" ? "text-muted-foreground" : "text-foreground"}`}>
+                      {t.title}
+                    </span>
+                    <span className="mt-0.5 text-xs italic text-muted-foreground/80">{t.meta}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* AI Strategy panel */}
+          <aside className="flex flex-col gap-4">
+            <section className="rounded-2xl border border-primary/20 bg-gradient-to-r from-surface to-primary/[0.08] p-5">
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-primary/15 text-primary">
+                  <Sparkles className="h-3.5 w-3.5" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-xs font-bold uppercase tracking-wider">Optimization Strategy</h3>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                    We found a 45-min gap. Moving non-critical emails to 16:30 would recover{" "}
+                    <span className="font-medium text-foreground">12% more energy</span> for the afternoon sprint.
+                  </p>
+                  <button className="mt-3 text-[10px] font-bold uppercase tracking-widest text-primary hover:underline">
+                    Apply strategy →
+                  </button>
                 </div>
               </div>
+            </section>
+
+            <section className="rounded-2xl border border-white/[0.05] bg-surface/50 p-5 backdrop-blur-sm">
+              <h3 className="text-xs font-bold uppercase tracking-wider">Smart suggestions</h3>
+              <ul className="mt-3 space-y-3 text-xs">
+                {[
+                  { body: "Batch emails 13:00–13:30", gain: "+47m" },
+                  { body: "Move standup to 9:30", gain: "+18% focus" },
+                  { body: "Delegate weekly status template", gain: "+32m" },
+                ].map((s) => (
+                  <li key={s.body} className="flex items-center justify-between gap-3 rounded-lg bg-white/[0.03] px-3 py-2">
+                    <span className="min-w-0 truncate text-muted-foreground">{s.body}</span>
+                    <span className="shrink-0 font-mono text-[10px] font-semibold text-success">{s.gain}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </aside>
+        </section>
+
+        {/* Module quick-links */}
+        <section>
+          <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Jump to module</h2>
+          <div className="grid grid-cols-4 gap-2 md:gap-3">
+            {QUICK_LINKS.map((q) => (
+              <Link
+                key={q.to}
+                to={q.to as never}
+                className="group flex flex-col items-center gap-2"
+              >
+                <div className="grid aspect-square w-full place-items-center rounded-2xl border border-white/[0.05] bg-surface/50 backdrop-blur-sm transition group-hover:border-primary/40 group-hover:bg-surface/80 group-hover:shadow-[0_0_24px_-12px_var(--color-primary)] md:max-w-[88px]">
+                  <q.icon className="h-5 w-5 text-muted-foreground transition group-hover:text-primary" />
+                </div>
+                <span className="text-[10px] font-medium text-muted-foreground md:text-xs">{q.label}</span>
+              </Link>
             ))}
           </div>
-        </Card>
-      </div>
+        </section>
 
-      {/* Quick module links */}
-      <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {[
-          { to: "/email", title: "Smart Email Studio", desc: "Draft, rewrite, and personalize.", icon: Mail },
-          { to: "/meetings", title: "Meeting Intelligence", desc: "Transcripts → action items.", icon: ClipboardList },
-          { to: "/research", title: "Research Hub", desc: "Documents → key insights.", icon: FlaskConical },
-          { to: "/tasks", title: "Task Board & Calendar", desc: "Plan, prioritize, focus.", icon: Calendar },
-        ].map((m) => (
-          <Link key={m.to} to={m.to as never} className="group">
-            <Card className="h-full p-5 transition hover:border-border-active hover:bg-surface-elevated/60">
-              <m.icon className="h-5 w-5 text-primary" />
-              <div className="mt-4 font-semibold">{m.title}</div>
-              <div className="mt-1 text-xs text-muted-foreground">{m.desc}</div>
-              <div className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary opacity-0 transition group-hover:opacity-100">
-                Open <ArrowRight className="h-3 w-3" />
-              </div>
-            </Card>
+        <div className="flex justify-end pb-2">
+          <Link to="/tasks" className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-primary">
+            Open full planner <ArrowRight className="h-3 w-3" />
           </Link>
-        ))}
+        </div>
       </div>
     </Shell>
   );
