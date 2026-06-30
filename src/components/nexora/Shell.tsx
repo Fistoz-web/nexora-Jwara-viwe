@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { type ReactNode, useState } from "react";
 import {
   LayoutDashboard,
@@ -6,7 +6,8 @@ import {
   ClipboardList,
   FlaskConical,
   CalendarDays,
-  Settings,
+  LogOut,
+  LogIn,
   Search,
   Bell,
   Sparkles,
@@ -14,6 +15,8 @@ import {
   X,
 } from "lucide-react";
 import { ChatbotOverlay } from "./ChatbotOverlay";
+import { useAuth } from "@/hooks/use-auth";
+import { toast } from "sonner";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
 const NAV: NavItem[] = [
@@ -32,6 +35,18 @@ export function Shell({ children, title, subtitle, actions }: {
 }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const displayName = profile?.display_name || user?.email?.split("@")[0] || "Guest";
+  const roleText = user ? (profile?.role || "Member") : "Not signed in";
+  const initials = displayName.slice(0, 2).toUpperCase();
+
+  const handleSignOut = async () => {
+    await signOut();
+    toast.success("Signed out");
+    navigate({ to: "/auth" });
+  };
 
   return (
     <div className="min-h-screen bg-background ambient-grid text-foreground">
@@ -77,12 +92,34 @@ export function Shell({ children, title, subtitle, actions }: {
 
           <div className="absolute inset-x-3 bottom-3 rounded-xl border border-border bg-surface-elevated/60 p-3">
             <div className="flex items-center gap-2 text-xs">
-              <div className="h-8 w-8 shrink-0 rounded-full brand-gradient grid place-items-center text-xs font-bold text-white">AM</div>
-              <div className="min-w-0">
-                <div className="truncate font-medium">Alex Morgan</div>
-                <div className="truncate text-[11px] text-muted-foreground">Product Manager</div>
+              <div className="h-8 w-8 shrink-0 rounded-full brand-gradient grid place-items-center text-xs font-bold text-white overflow-hidden">
+                {profile?.avatar_url ? (
+                  <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  initials
+                )}
               </div>
-              <Settings className="ml-auto h-4 w-4 text-muted-foreground" />
+              <div className="min-w-0 flex-1">
+                <div className="truncate font-medium">{displayName}</div>
+                <div className="truncate text-[11px] text-muted-foreground">{roleText}</div>
+              </div>
+              {user ? (
+                <button
+                  onClick={handleSignOut}
+                  title="Sign out"
+                  className="ml-auto grid h-7 w-7 place-items-center rounded-md text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              ) : (
+                <Link
+                  to="/auth"
+                  title="Sign in"
+                  className="ml-auto inline-flex items-center gap-1 rounded-md bg-primary/15 px-2 py-1 text-[11px] font-semibold text-primary hover:bg-primary/25"
+                >
+                  <LogIn className="h-3 w-3" /> Sign in
+                </Link>
+              )}
             </div>
           </div>
         </aside>
