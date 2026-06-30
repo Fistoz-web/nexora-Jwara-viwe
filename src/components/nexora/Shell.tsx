@@ -15,13 +15,14 @@ import {
 } from "lucide-react";
 import { ChatbotOverlay } from "./ChatbotOverlay";
 
-const NAV = [
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
+const NAV: NavItem[] = [
   { to: "/", label: "Daily Briefing", icon: LayoutDashboard, exact: true },
   { to: "/email", label: "Smart Email Studio", icon: Mail },
   { to: "/meetings", label: "Meeting Intelligence", icon: ClipboardList },
   { to: "/research", label: "Research Hub", icon: FlaskConical },
   { to: "/tasks", label: "Task Board & Calendar", icon: CalendarDays },
-] as const;
+];
 
 export function Shell({ children, title, subtitle, actions }: {
   children: ReactNode;
