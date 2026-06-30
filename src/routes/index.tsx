@@ -3,7 +3,7 @@ import { Shell } from "@/components/nexora/Shell";
 import { Card, Pill, SectionHeader, BrandButton, GhostButton } from "@/components/nexora/ui";
 import {
   Sparkles, TrendingUp, Clock, Target, Zap, ArrowRight,
-  Mail, Calendar, FlaskConical, CheckCircle2, AlertCircle,
+  Mail, Calendar, FlaskConical, CheckCircle2, AlertCircle, ClipboardList,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
