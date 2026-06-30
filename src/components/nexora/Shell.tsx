@@ -59,7 +59,7 @@ export function Shell({ children, title, subtitle, actions }: {
               return (
                 <Link
                   key={item.to}
-                  to={item.to}
+                  to={item.to as never}
                   onClick={() => setOpen(false)}
                   className={`group mb-0.5 flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition ${
                     active
