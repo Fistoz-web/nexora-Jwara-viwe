@@ -613,14 +613,14 @@ function ResearchPage() {
           </Card>
 
           {/* Chat surface */}
-          <Card
-            className={`relative flex min-h-[420px] flex-1 flex-col overflow-hidden transition ${dragOver ? "ring-2 ring-primary" : ""}`}
-            onDragOver={(e) => {
+          <div
+            className={`relative flex min-h-[420px] flex-1 flex-col overflow-hidden rounded-xl border border-border bg-surface/80 shadow-[var(--shadow-soft)] backdrop-blur-sm transition ${dragOver ? "ring-2 ring-primary" : ""}`}
+            onDragOver={(e: React.DragEvent<HTMLDivElement>) => {
               e.preventDefault();
               setDragOver(true);
             }}
             onDragLeave={() => setDragOver(false)}
-            onDrop={(e) => {
+            onDrop={(e: React.DragEvent<HTMLDivElement>) => {
               e.preventDefault();
               setDragOver(false);
               if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
