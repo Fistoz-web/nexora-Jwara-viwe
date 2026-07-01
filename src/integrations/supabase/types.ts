@@ -41,6 +41,118 @@ export type Database = {
         }
         Relationships: []
       }
+      research_documents: {
+        Row: {
+          created_at: string
+          extracted_text: string | null
+          file_name: string
+          id: string
+          mime_type: string
+          session_id: string
+          size_bytes: number
+          storage_path: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          extracted_text?: string | null
+          file_name: string
+          id?: string
+          mime_type: string
+          session_id: string
+          size_bytes: number
+          storage_path: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          extracted_text?: string | null
+          file_name?: string
+          id?: string
+          mime_type?: string
+          session_id?: string
+          size_bytes?: number
+          storage_path?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "research_documents_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "research_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      research_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: Json
+          role: string
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: Json
+          role: string
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: Json
+          role?: string
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "research_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "research_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      research_sessions: {
+        Row: {
+          complexity: string
+          created_at: string
+          id: string
+          is_favorite: boolean
+          mode: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          complexity?: string
+          created_at?: string
+          id?: string
+          is_favorite?: boolean
+          mode?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          complexity?: string
+          created_at?: string
+          id?: string
+          is_favorite?: boolean
+          mode?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
