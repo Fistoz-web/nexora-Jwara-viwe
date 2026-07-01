@@ -174,7 +174,7 @@ function ResearchPage() {
       setComplexity((res.session.complexity as Complexity) || "professional");
       setDocuments(res.documents as DocRow[]);
       setInitialMessages(
-        (res.messages as { message: UIMessage }[]).map((m) => m.message).filter(Boolean),
+        (res.messages as unknown as { message: UIMessage }[]).map((m) => m.message).filter(Boolean),
       );
     } catch (e) {
       console.error(e);
@@ -211,7 +211,7 @@ function ResearchPage() {
     () =>
       new DefaultChatTransport({
         api: "/api/research/chat",
-        headers: () => (token ? { Authorization: `Bearer ${token}` } : {}),
+        headers: (): Record<string, string> => (token ? { Authorization: `Bearer ${token}` } : {}),
         body: () => ({ sessionId: activeId, mode, complexity }),
       }),
     [token, activeId, mode, complexity],
