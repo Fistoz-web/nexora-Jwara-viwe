@@ -762,7 +762,7 @@ function ResearchPage() {
                 Supported: PDF, DOCX, TXT, MD, CSV, PPTX · up to {MAX_UPLOAD_MB} MB · your files stay private to you.
               </p>
             </div>
-          </Card>
+          </div>
         </section>
 
         {/* Right rail: documents + suggested */}
