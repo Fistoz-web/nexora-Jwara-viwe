@@ -84,7 +84,7 @@ export const Route = createFileRoute("/api/research/chat")({
             session_id: body.sessionId,
             user_id: userId,
             role: "user",
-            message: lastMsg as unknown as object,
+            message: JSON.parse(JSON.stringify(lastMsg)),
           });
           // Auto-title on first message
           const { count } = await supabase
@@ -108,7 +108,7 @@ export const Route = createFileRoute("/api/research/chat")({
         const result = streamText({
           model,
           system,
-          messages: convertToModelMessages(body.messages),
+          messages: await convertToModelMessages(body.messages),
         });
 
         return result.toUIMessageStreamResponse({
@@ -118,7 +118,7 @@ export const Route = createFileRoute("/api/research/chat")({
               session_id: body.sessionId!,
               user_id: userId,
               role: "assistant",
-              message: responseMessage as unknown as object,
+              message: JSON.parse(JSON.stringify(responseMessage)),
             });
             await supabase
               .from("research_sessions")
